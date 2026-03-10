@@ -6,12 +6,12 @@ services:
     container_name: cloud_hosting_db
     restart: always
     env_file:
-      - .env                     # берём все секреты из .env, в том числе POSTGRES_USER/PASSWORD/DB
+      - .env
     ports:
       - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./docker-initdb:/docker-entrypoint-initdb.d  # сюда помещаем seed.sql, функции, триггеры, view и indexes
+      - ./docker-initdb:/docker-entrypoint-initdb.d
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $POSTGRES_USER"]
       interval: 5s
@@ -28,9 +28,9 @@ services:
     ports:
       - "8000:8000"
     env_file:
-      - .env                     # DATABASE_URL и ENVIRONMENT берутся отсюда
+      - .env
     volumes:
-      - ./api:/app/api           # для разработки монтируем код
+      - ./api:/app/api
     command: >
       sh -c "uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload"
 
